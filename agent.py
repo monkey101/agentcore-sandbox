@@ -7,59 +7,26 @@ import json
 import operator
 import math
 import os, subprocess
+import random
+import string
 from bedrock_agentcore.runtime import BedrockAgentCoreApp
 
 app = BedrockAgentCoreApp()
 
 def test_sub_process() -> str:
     path ="./"
+
+    # Touch a file with a randomized filename
+    random_filename = ''.join(random.choices(string.ascii_lowercase + string.digits, k=10)) + '.txt'
+    touch_cmd = ["touch", os.path.join(path, random_filename)]
+    subprocess.run(touch_cmd, check=True)
+    print(f"Created file: {random_filename}")
+
     cmd = ["ls", "-la", path]
 
     p = subprocess.run(cmd, capture_output=True, text=True, check=True)
     print(p.stdout + "\n" + p.stderr)
     return p.stdout + "\n" + p.stderr
-
-# Create calculator tool
-@tool
-def calculator(expression: str) -> str:
-    """
-    Calculate the result of a mathematical expression.
-    
-    Args:
-        expression: A mathematical expression as a string (e.g., "2 + 3 * 4", "sqrt(16)", "sin(pi/2)")
-    
-    Returns:
-        The result of the calculation as a string
-    """
-    try:
-        # Define safe functions that can be used in expressions
-        safe_dict = {
-            "__builtins__": {},
-            "abs": abs, "round": round, "min": min, "max": max,
-            "sum": sum, "pow": pow,
-            # Math functions
-            "sqrt": math.sqrt, "sin": math.sin, "cos": math.cos, "tan": math.tan,
-            "log": math.log, "log10": math.log10, "exp": math.exp,
-            "pi": math.pi, "e": math.e,
-            "ceil": math.ceil, "floor": math.floor,
-            "degrees": math.degrees, "radians": math.radians,
-            # Basic operators (for explicit use)
-            "add": operator.add, "sub": operator.sub,
-            "mul": operator.mul, "truediv": operator.truediv,
-        }
-        
-        # Evaluate the expression safely
-        result = eval(expression, safe_dict)
-        return str(result)
-        
-    except ZeroDivisionError:
-        return "Error: Division by zero"
-    except ValueError as e:
-        return f"Error: Invalid value - {str(e)}"
-    except SyntaxError:
-        return "Error: Invalid mathematical expression"
-    except Exception as e:
-        return f"Error: {str(e)}"
 
 # Create a custom weather tool
 @tool
@@ -80,7 +47,7 @@ def create_agent():
     )
     
     # Bind tools to the LLM
-    tools = [calculator, weather]
+    tools = [weather]
     llm_with_tools = llm.bind_tools(tools)
     
     # System message
@@ -135,11 +102,12 @@ def langgraph_bedrock(payload):
     return (response["messages"][-1].content + "\n" + ls_output)
 
 if __name__ == "__main__":
-    """
-    parser = argparse.ArgumentParser()
-    parser.add_argument("payload", type=str)
-    args = parser.parse_args()
-    response = langgraph_bedrock(json.loads(args.payload))
-    print(response)
-    """
-    app.run()
+    if (False):  # Change to False to run as a Bedrock app
+        parser = argparse.ArgumentParser()
+        parser.add_argument("payload", type=str)
+        args = parser.parse_args()
+        response = langgraph_bedrock(json.loads(args.payload))
+        print(response)
+    else:
+        app.run()
+
