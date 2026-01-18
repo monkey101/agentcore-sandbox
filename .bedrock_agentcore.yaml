@@ -30,7 +30,7 @@ agents:
     bedrock_agentcore:
       agent_id: agent-QM6HsbF0sK
       agent_arn: arn:aws:bedrock-agentcore:us-west-2:468199119368:runtime/agent-QM6HsbF0sK
-      agent_session_id: cfb76857-0558-4a8e-adc4-ed30538942d1
+      agent_session_id: null
     codebuild:
       project_name: bedrock-agentcore-agent-builder
       execution_role: arn:aws:iam::468199119368:role/AmazonBedrockAgentCoreSDKCodeBuild-us-west-2-d4f0bc5a29
