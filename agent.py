@@ -7,7 +7,10 @@ import random
 import string
 from bedrock_agentcore.runtime import BedrockAgentCoreApp
 
-ROOT_DIR = "/app" 
+# Use environment variable to determine root directory
+# Set LOCAL_MODE=1 to run locally, otherwise runs as Bedrock app
+LOCAL_MODE = os.environ.get('LOCAL_MODE', '0') == '1'
+ROOT_DIR = "." if LOCAL_MODE else "/app"
 
 app = BedrockAgentCoreApp()
 
@@ -55,13 +58,14 @@ def invoke(payload):
 
 
 if __name__ == "__main__":
-    if (False):  # Change to False to run as a Bedrock app
-        ROOT_DIR = "."
+    if LOCAL_MODE:
+        # Local testing mode - accept payload via command line
         parser = argparse.ArgumentParser()
-        parser.add_argument("payload", type=str)
+        parser.add_argument("payload", type=str, help="JSON payload with cmd and optional file_content")
         args = parser.parse_args()
         response = invoke(json.loads(args.payload))
         print(response)
     else:
+        # Production mode - run as Bedrock AgentCore app
         app.run()
 

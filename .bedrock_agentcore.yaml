@@ -1,0 +1,60 @@
+default_agent: agent
+agents:
+  agent:
+    name: agent
+    entrypoint: agent.py
+    deployment_type: container
+    runtime_type: null
+    platform: linux/arm64
+    container_runtime: docker
+    source_path: null
+    aws:
+      execution_role: arn:aws:iam::468199119368:role/AmazonBedrockAgentCoreSDKRuntime-us-west-2-d4f0bc5a29
+      execution_role_auto_create: false
+      account: '468199119368'
+      region: us-west-2
+      ecr_repository: 468199119368.dkr.ecr.us-west-2.amazonaws.com/bedrock-agentcore-agent
+      ecr_auto_create: false
+      s3_path: null
+      s3_auto_create: false
+      network_configuration:
+        network_mode: PUBLIC
+        network_mode_config: null
+      protocol_configuration:
+        server_protocol: HTTP
+      observability:
+        enabled: true
+      lifecycle_configuration:
+        idle_runtime_session_timeout: null
+        max_lifetime: null
+    bedrock_agentcore:
+      agent_id: agent-QM6HsbF0sK
+      agent_arn: arn:aws:bedrock-agentcore:us-west-2:468199119368:runtime/agent-QM6HsbF0sK
+      agent_session_id: cfb76857-0558-4a8e-adc4-ed30538942d1
+    codebuild:
+      project_name: bedrock-agentcore-agent-builder
+      execution_role: arn:aws:iam::468199119368:role/AmazonBedrockAgentCoreSDKCodeBuild-us-west-2-d4f0bc5a29
+      source_bucket: bedrock-agentcore-codebuild-sources-468199119368-us-west-2
+    memory:
+      mode: NO_MEMORY
+      memory_id: null
+      memory_arn: null
+      memory_name: null
+      event_expiry_days: 30
+      first_invoke_memory_check_done: false
+      was_created_by_toolkit: false
+    identity:
+      credential_providers: []
+      workload: null
+    aws_jwt:
+      enabled: false
+      audiences: []
+      signing_algorithm: ES384
+      issuer_url: null
+      duration_seconds: 300
+    authorizer_configuration: null
+    request_header_configuration: null
+    oauth_configuration: null
+    api_key_env_var_name: null
+    api_key_credential_provider_name: null
+    is_generated_by_agentcore_create: false
